@@ -1,5 +1,9 @@
 #include <iostream>
-#include <cstdio>
+#include <cstdlib>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
 #include "i2c.h"
@@ -35,13 +39,13 @@ int I2C::open() {
 }
 
 
-int I2C::close() {
-	close(this->file);
+void I2C::close() {
+	::close(this->file);
 	this->file = -1;
 }
 
 
-uint8_t I2C::read(uint32_t reg) {
+uint8_t I2C::read(uint8_t reg) {
 	uint8_t data;
 
 	if (::write(this->file, &reg, 1) != 1) {
@@ -49,24 +53,25 @@ uint8_t I2C::read(uint32_t reg) {
 		return -1;
 	}
 
-	if (::read(this->file, &date, 1) != 1) {
+	if (::read(this->file, &data, 1) != 1) {
 		perror("Fail to read in the value\n");
 		return -1;
 	}
+
 	return data;
 }
 
 
-uint8_t* I2C::readBuffer(uint32_t reg, uint32_t num) {
-	uint8_t* data = calloc(num, 1);
+uint8_t* I2C::readBuffer(uint8_t reg, int num) {
+	uint8_t *data = (uint8_t*)calloc(num, 1);
 
 	if (::write(this->file, &reg, 1) != 1) {
 		perror("Failed to reset the read address\n");
-		return -1;
+		return NULL;
 	}
 
-	if (::read(this->file, &date, num) != num) {
-		perror("Fail to read in the buffer\n");
+	if (::read(this->file, data, num) != num) {
+		perror("Failed to read in the buffer\n");
 		return NULL;
 	}
 
@@ -74,7 +79,7 @@ uint8_t* I2C::readBuffer(uint32_t reg, uint32_t num) {
 }
 
 
-int I2C::write(uint32_t reg, uint8_t value) {
+int I2C::write(uint8_t reg, uint8_t value) {
 	uint8_t buffer[2] = {reg, value};
 
 	if (::write(this->file, buffer, 2) != 2) {
@@ -86,12 +91,13 @@ int I2C::write(uint32_t reg, uint8_t value) {
 }
 
 
-int I2C::writeBuffer(uint32_t reg, uint8_t *buffer, uint32_t num) {
-	for (uint32_t i = 0; i < num; i++) {
-		ret = this->write(reg+i, buffer[i]);
+int I2C::writeBuffer(uint8_t reg, uint8_t *buffer, int num) {
+	for (int i = 0; i < num; i++) {
+		int ret = this->write(reg+i, buffer[i]);
 		if (ret == -1) {
 			return -1;
 		}
 	}
+
 	return 0;
 }

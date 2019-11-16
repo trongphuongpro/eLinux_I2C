@@ -13,12 +13,12 @@ public:
 	~I2C();
 
 	virtual int open();
-	virtual int close();
-	
-	virtual uint8_t readRegister(uint32_t reg);
-	virtual uint8_t* readRegisters(uint32_t reg, uint32_t num);
-	virtual int writeRegister(uint32_t reg, uint8_t value);
-	virtual int writeRegisters(uint32_t reg, uint8_t *buffer);
+	virtual void close();
+
+	virtual uint8_t read(uint8_t reg);
+	virtual uint8_t* readBuffer(uint8_t reg, int num);
+	virtual int write(uint8_t reg, uint8_t value);
+	virtual int writeBuffer(uint8_t reg, uint8_t *buffer, int num);
 
 private:
 	uint8_t address;
@@ -27,4 +27,4 @@ private:
 
 } /* namespace BBB */
 
-#endif /* __I2C__
+#endif /* __I2C__ */

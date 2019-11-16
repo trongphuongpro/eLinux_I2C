@@ -12,3 +12,8 @@ add_compile_options(
 	-Werror
 	-O2
 )
+
+include_directories(../include)
+set(SOURCE test.cpp ../src/i2c.cpp)
+add_executable(testbench ${SOURCE})
+install(TARGETS testbench DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
