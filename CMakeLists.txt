@@ -12,3 +12,8 @@ add_compile_options(
 	-Werror
 	-O2
 )
+
+set(LIB_NAME i2c)
+add_library(${LIB_NAME} STATIC src/i2c.cpp)
+target_include_directories(${LIB_NAME} PUBLIC include)
+install(TARGETS ${LIB_NAME} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
