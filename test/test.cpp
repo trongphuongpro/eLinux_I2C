@@ -76,7 +76,7 @@ void rtc_show(DateTime *datetime) {
 
 int main() {
 
-	I2C bus(DS1307);
+	I2C bus(I2C::I2C2, DS1307);
 	DateTime dt;
 
 	rtc_getTime(&bus, &dt);

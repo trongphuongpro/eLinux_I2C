@@ -13,7 +13,8 @@ using namespace BBB;
 using namespace std;
 
 
-I2C::I2C(uint8_t address) {
+I2C::I2C(I2C_BUS bus, uint8_t address) {
+	this->filename = I2C_PATH + to_string(bus);
 	this->address = address;
 	this->file = -1;
 	this->open();
@@ -27,7 +28,7 @@ I2C::~I2C() {
 
 
 int I2C::open() {
-	if ((this->file = ::open(I2C_2_PATH, O_RDWR)) < 0) {
+	if ((this->file = ::open(this->filename.c_str(), O_RDWR)) < 0) {
 		perror("Fail to open i2c bus\n");
 		return -1;
 	}
