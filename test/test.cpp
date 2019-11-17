@@ -82,4 +82,9 @@ int main() {
 	rtc_getTime(&bus, &dt);
 	rtc_show(&dt);
 
+	dt.year = 2019;
+	rtc_setTime(&bus, &dt);
+	rtc_getTime(&bus, &dt);
+	rtc_show(&dt);
+
 }
