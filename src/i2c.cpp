@@ -13,7 +13,7 @@ using namespace BBB;
 using namespace std;
 
 
-I2C::I2C(I2C_BUS bus, uint8_t address) {
+I2C::I2C(BUS bus, uint8_t address) {
 	this->filename = I2C_PATH + to_string(bus);
 	this->address = address;
 	this->file = -1;

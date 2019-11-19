@@ -10,9 +10,9 @@ namespace BBB {
 
 class I2C {
 public:
-	enum I2C_BUS {I2C1=1, I2C2=2};
+	enum BUS {I2C1=1, I2C2=2};
 
-	I2C(I2C_BUS bus, uint8_t address);
+	I2C(BUS bus, uint8_t address);
 	~I2C();
 
 	virtual int open();
