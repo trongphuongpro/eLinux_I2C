@@ -21,7 +21,7 @@ public:
 	virtual uint8_t read(uint8_t reg);
 	virtual uint8_t* readBuffer(uint8_t reg, int num);
 	virtual int write(uint8_t reg, uint8_t value);
-	virtual int writeBuffer(uint8_t reg, uint8_t *buffer, int num);
+	virtual int writeBuffer(uint8_t reg, const void *buffer, int num);
 
 private:
 	uint8_t address;

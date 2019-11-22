@@ -92,9 +92,11 @@ int I2C::write(uint8_t reg, uint8_t value) {
 }
 
 
-int I2C::writeBuffer(uint8_t reg, uint8_t *buffer, int num) {
+int I2C::writeBuffer(uint8_t reg, const void *buffer, int num) {
+	const uint8_t *data = static_cast<const uint8_t*>(buffer);
+
 	for (int i = 0; i < num; i++) {
-		int ret = this->write(reg+i, buffer[i]);
+		int ret = this->write(reg+i, data[i]);
 		if (ret == -1) {
 			return -1;
 		}
