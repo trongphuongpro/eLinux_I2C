@@ -1,9 +1,6 @@
 #ifndef __I2C__
 #define __I2C__
 
-#include <cstdint>
-#include <string>
-
 #define I2C_PATH	"/dev/i2c-"
 
 namespace BBB {
@@ -19,9 +16,9 @@ public:
 	virtual void close();
 
 	virtual uint8_t read(uint8_t reg);
-	virtual uint8_t* readBuffer(uint8_t reg, int num);
+	virtual int readBuffer(uint8_t reg, void *buffer, uint16_t num);
 	virtual int write(uint8_t reg, uint8_t value);
-	virtual int writeBuffer(uint8_t reg, const void *buffer, int num);
+	virtual int writeBuffer(uint8_t reg, const void *buffer, uint16_t num);
 
 private:
 	uint8_t address;

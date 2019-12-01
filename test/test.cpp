@@ -26,7 +26,9 @@ uint8_t dec2bcd(uint8_t value) {
 
 int rtc_getTime(I2C* bus, DateTime *datetime) {
 
-	uint8_t *buffer = bus->readBuffer(0x00, BUFFERSIZE);
+	uint8_t buffer[BUFFERSIZE];
+
+	bus->readBuffer(0x00, buffer, BUFFERSIZE);
 
 	if (buffer == NULL) {
 		cout << "Fail to read buffer" << endl;

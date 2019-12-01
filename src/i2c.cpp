@@ -63,20 +63,20 @@ uint8_t I2C::read(uint8_t reg) {
 }
 
 
-uint8_t* I2C::readBuffer(uint8_t reg, int num) {
-	uint8_t *data = (uint8_t*)calloc(num, 1);
+int I2C::readBuffer(uint8_t reg, void *buffer, uint16_t num) {
+	uint8_t *data = (uint8_t*)buffer;
 
 	if (::write(this->file, &reg, 1) != 1) {
 		perror("Failed to reset the read address\n");
-		return NULL;
+		return -1;
 	}
 
 	if (::read(this->file, data, num) != num) {
 		perror("Failed to read in the buffer\n");
-		return NULL;
+		return -1;
 	}
 
-	return data;
+	return 0;
 }
 
 
@@ -92,8 +92,8 @@ int I2C::write(uint8_t reg, uint8_t value) {
 }
 
 
-int I2C::writeBuffer(uint8_t reg, const void *buffer, int num) {
-	const uint8_t *data = static_cast<const uint8_t*>(buffer);
+int I2C::writeBuffer(uint8_t reg, const void *buffer, uint16_t num) {
+	const uint8_t *data = (const uint8_t*)buffer;
 
 	for (int i = 0; i < num; i++) {
 		int ret = this->write(reg+i, data[i]);
