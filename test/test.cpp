@@ -24,11 +24,13 @@ uint8_t dec2bcd(uint8_t value) {
 }
 
 
-int rtc_getTime(I2C* bus, DateTime *datetime) {
+int rtc_getTime(I2C *bus, DateTime *datetime) {
 
 	uint8_t buffer[BUFFERSIZE];
 
-	bus->readBuffer(0x00, buffer, BUFFERSIZE);
+	// reset DS1307 pointer
+	bus->send(DS1307, 0x00);
+	bus->receiveBuffer(DS1307, buffer, BUFFERSIZE);
 
 	if (buffer == NULL) {
 		cout << "Fail to read buffer" << endl;
@@ -48,17 +50,18 @@ int rtc_getTime(I2C* bus, DateTime *datetime) {
 
 
 int rtc_setTime(I2C* bus, DateTime *datetime) {
-	uint8_t buffer[BUFFERSIZE];
+	uint8_t buffer[BUFFERSIZE+1];
 
-	buffer[0] = dec2bcd(datetime->second);
-	buffer[1] = dec2bcd(datetime->minute);
-	buffer[2] = dec2bcd(datetime->hour);
-	buffer[3] = dec2bcd(datetime->dayofweek);
-	buffer[4] = dec2bcd(datetime->date);
-	buffer[5] = dec2bcd(datetime->month);
-	buffer[6] = dec2bcd(datetime->year - 2000);
+	buffer[0] = 0;
+	buffer[1] = dec2bcd(datetime->second);
+	buffer[2] = dec2bcd(datetime->minute);
+	buffer[3] = dec2bcd(datetime->hour);
+	buffer[4] = dec2bcd(datetime->dayofweek);
+	buffer[5] = dec2bcd(datetime->date);
+	buffer[6] = dec2bcd(datetime->month);
+	buffer[7] = dec2bcd(datetime->year - 2000);
 
-	bus->writeBuffer(0x00, buffer, BUFFERSIZE);
+	bus->sendBuffer(DS1307, buffer, BUFFERSIZE+1);
 
 	return SUCCESS;
 }
@@ -78,13 +81,13 @@ void rtc_show(DateTime *datetime) {
 
 int main() {
 
-	I2C bus(I2C::I2C2, DS1307);
+	I2C bus(I2C::I2C2);
 	DateTime dt;
 
 	rtc_getTime(&bus, &dt);
 	rtc_show(&dt);
 
-	dt.year = 2019;
+	dt.year = 2020;
 	rtc_setTime(&bus, &dt);
 	rtc_getTime(&bus, &dt);
 	rtc_show(&dt);
